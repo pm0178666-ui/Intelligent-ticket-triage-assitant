@@ -1,0 +1,392 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Description: Ticket Triage Assistant
+
+Globals:
+  Function:
+    Runtime: python3.11
+    Timeout: 30
+    MemorySize: 128
+    
+
+Resources:
+
+  # =========================
+  # 1. SQS QUEUE
+  # =========================
+  TicketQueue:
+    Type: AWS::SQS::Queue
+
+  # =========================
+  # 2. DYNAMODB TABLE
+  # =========================
+ 
+  #orderstable
+  OrdersTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: OrdersTable
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: orderId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: orderId
+          KeyType: HASH
+
+  #TicketsTable
+  TicketsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: TicketsTable
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: ticketId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: ticketId
+          KeyType: HASH
+
+  #ApprovalsTable
+  ApprovalsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: ApprovalsTable
+      BillingMode: PAY_PER_REQUEST
+
+      AttributeDefinitions:
+        - AttributeName: approvalId
+          AttributeType: S
+
+      KeySchema:
+        - AttributeName: approvalId
+          KeyType: HASH
+
+  # =========================
+  # 3. S3 BUCKET (Attachments)
+  # =========================
+  AttachmentsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      VersioningConfiguration:
+        Status: Enabled
+
+  # =========================
+  # 4. SNS TOPIC
+  # =========================
+
+  #NotificationTopic
+  NotificationTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: TicketNotifications
+      
+  #ApprovalSNSTopic
+  ApprovalSNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: approval-topic
+
+  # =========================
+  # 5. API GATEWAY
+  # =========================
+  IngestionApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+
+  # =========================
+  # 6. LAMBDA-1 INGESTION
+  # =========================
+  IngestionFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ingestion/
+      Handler: app.lambda_handler
+      Environment:
+        Variables:
+          QUEUE_URL: !Ref TicketQueue
+          TABLE_NAME: !Ref TicketsTable
+          BUCKET_NAME: !Ref AttachmentsBucket
+          APPROVALS_TABLE: !Ref ApprovalsTable
+          ORDERS_TABLE: !Ref OrdersTable
+          PRESIGNED_EXPIRY: 3600
+      Policies:
+        - SQSSendMessagePolicy:
+            QueueName: !GetAtt TicketQueue.QueueName
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TicketsTable
+        - DynamoDBReadPolicy:
+            TableName: !Ref ApprovalsTable
+        - DynamoDBReadPolicy:
+            TableName: !Ref OrdersTable
+        - S3WritePolicy:
+            BucketName: !Ref AttachmentsBucket
+      Events:
+        CreateTicket:
+          Type: Api
+          Properties:
+            RestApiId: !Ref IngestionApi
+            Path: /tickets
+            Method: post
+
+        GetTickets:
+          Type: Api
+          Properties:
+            RestApiId: !Ref IngestionApi
+            Path: /tickets
+            Method: get
+
+        GetTicketById:
+          Type: Api
+          Properties:
+            RestApiId: !Ref IngestionApi
+            Path: /tickets/{ticketId}
+            Method: get
+
+        UpdateTicket:
+          Type: Api
+          Properties:
+            RestApiId: !Ref IngestionApi
+            Path: /tickets/{ticketId}
+            Method: put
+
+        DeleteTicket:
+          Type: Api
+          Properties:
+            RestApiId: !Ref IngestionApi
+            Path: /tickets/{ticketId}
+            Method: delete
+
+        GetApprovals:
+          Type: Api
+          Properties:
+            RestApiId: !Ref IngestionApi
+            Path: /approvals
+            Method: get  
+
+
+        GetOrders:
+          Type: Api
+          Properties:
+            RestApiId: !Ref IngestionApi
+            Path: /orders
+            Method: get     
+
+  # =========================
+  # 7. LAMBDA-2 PROCESSOR
+  # =========================
+  ProcessorFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: processor/
+      Handler: app.lambda_handler
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref TicketsTable
+          ORDERS_TABLE: !Ref OrdersTable
+          SNS_TOPIC_ARN: !Ref NotificationTopic
+          KB_ID: STTTIHLAZW
+          AGENT_ID: UWNBPAPG9G
+          AGENT_ALIAS_ID: 19H6DKKF1C
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TicketsTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref OrdersTable
+        - SNSPublishMessagePolicy:
+            TopicName: TicketNotifications
+        - Statement:
+            - Effect: Allow
+              Action:
+                - bedrock:InvokeModel
+                - bedrock:RetrieveAndGenerate
+                - bedrock:Retrieve
+                - bedrock:InvokeModel
+                - bedrock:GetInferenceProfile
+                - bedrock:InvokeAgent
+              Resource: "*"
+      Events:
+        SQSTrigger:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt TicketQueue.Arn
+            BatchSize: 1
+        
+  # =========================
+  # 8. getOrderStatus Lambda(Agent tool)
+  # =========================
+
+  GetOrderStatusFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: get-order-status/
+      Handler: app.lambda_handler
+      Runtime: python3.11
+
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref OrdersTable
+
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref OrdersTable
+            
+  # =========================
+  # 9. resetPassword Lambda(Agent tool)
+  # =========================
+  
+  ResetPasswordFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: reset-password/
+      Handler: app.lambda_handler
+      Runtime: python3.11
+
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref TicketsTable
+
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TicketsTable   
+        - Statement:
+            - Effect: Allow
+              Action:
+                - ses:SendEmail
+                - ses:SendRawEmail
+              Resource: "*"       
+        
+
+  
+  # =========================
+  # 10. issueRefund Lambda(Agent tool)
+  # =========================
+  IssueRefundFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: issue-refund/
+      Handler: app.lambda_handler
+      Runtime: python3.11
+
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref TicketsTable
+
+      Policies:
+        - AWSLambdaBasicExecutionRole
+
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TicketsTable
+  
+  # =========================
+  # 11.ApprovalRequest lambda 
+  # =========================
+
+  ApprovalRequestFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: approval-request/
+      Handler: app.lambda_handler
+      Runtime: python3.11
+
+      Environment:
+        Variables:
+          APPROVALS_TABLE: !Ref ApprovalsTable
+          SNS_TOPIC_ARN: !Ref ApprovalSNSTopic
+          TICKETS_TABLE: !Ref TicketsTable
+
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ApprovalsTable
+        - DynamoDBReadPolicy:
+            TableName: !Ref TicketsTable
+        - SNSPublishMessagePolicy:
+            TopicName: !GetAtt ApprovalSNSTopic.TopicName
+
+  
+  # =========================
+  # 12.ApprovalAction lambda 
+  # =========================
+
+  ApprovalActionFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: approval-action/
+      Handler: app.lambda_handler
+      Runtime: python3.11
+
+      Environment:
+        Variables:
+          APPROVALS_TABLE: !Ref ApprovalsTable
+          ISSUE_REFUND_FN: !Ref IssueRefundFunction
+          RESET_PASSWORD_FN: !Ref ResetPasswordFunction
+
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ApprovalsTable
+        - AWSLambda_FullAccess
+
+      Events:
+        ApproveAPI:
+          Type: Api
+          Properties:
+            RestApiId: !Ref IngestionApi   
+            Path: /approve
+            Method: GET
+
+        RejectAPI:
+          Type: Api
+          Properties:
+            RestApiId: !Ref IngestionApi 
+            Path: /reject
+            Method: GET
+  
+
+
+  BedrockInvokeGetOrderStatusPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref GetOrderStatusFunction
+      Principal: bedrock.amazonaws.com
+
+  BedrockInvokeApprovalRequestPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref ApprovalRequestFunction
+      Principal: bedrock.amazonaws.com
+
+  
+
+Outputs:
+  ApiEndpoint:
+    Description: API Endpoint
+    Value: !Sub "https://${IngestionApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/tickets"
+
+  QueueURL:
+    Description: SQS Queue URL
+    Value: !Ref TicketQueue
+
+  DynamoTable:
+    Description: DynamoDB Table name
+    Value: !Ref TicketsTable
+
+  S3Bucket:
+    Description: S3 Bucket for attachments
+    Value: !Ref AttachmentsBucket
+
+  SNSTopic:
+    Description: SNS Topic ARN
+    Value: !Ref NotificationTopic  
+
+  ApprovalApiApprove:
+    Description: Approve endpoint
+    Value: !Sub "https://${IngestionApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/approve"
+
+  ApprovalApiReject:
+    Description: Reject endpoint
+    Value: !Sub "https://${IngestionApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/reject"
