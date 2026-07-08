@@ -187,9 +187,9 @@ Resources:
           TABLE_NAME: !Ref TicketsTable
           ORDERS_TABLE: !Ref OrdersTable
           SNS_TOPIC_ARN: !Ref NotificationTopic
-          KB_ID: STTTIHLAZW
-          AGENT_ID: UWNBPAPG9G
-          AGENT_ALIAS_ID: 19H6DKKF1C
+          KB_ID: 9L4ONOX2VK
+          AGENT_ID: PK6X3G2JWT
+          AGENT_ALIAS_ID: 61GNL7OQQM
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref TicketsTable
