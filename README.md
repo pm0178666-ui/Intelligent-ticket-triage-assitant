@@ -45,6 +45,9 @@ The solution is built on a completely serverless AWS architecture and uses Retri
 
 #  Features
 
+- Modern React-based User Interface
+- Frontend deployment using AWS Amplify
+- Secure REST API integration
 - AI-powered ticket classification
 - Automatic priority detection
 - Ticket complexity analysis
@@ -87,15 +90,20 @@ The application follows an event-driven serverless architecture.
 | Amazon Cognito | Authentication |
 | Amazon SNS | Notifications |
 | Amazon SES | Password Reset Emails |
+| AWS Amplify | Frontend Hosting & Continuous Deployment |
 | IAM | Permissions |
 
 ---
 
-# ⚙️ Technology Stack
+# Technology Stack
 
 ### Frontend
 
-- Streamlit
+- React
+- Vite
+- React Router
+- Axios
+- CSS
 
 ### Backend
 
@@ -313,6 +321,7 @@ The Reset Password Lambda:
 
 Features include:
 
+- Modern React Interface
 - User Login
 - Create Ticket
 - Upload Attachments
@@ -339,14 +348,27 @@ Support users can:
 # Project Structure
 
 ```
-Intelligent-ticket-triage-assitant/
+Intelligent-ticket-triage-assistant/
 
 ├── TicketTriageUI/
-│   ├── app/
-│   ├── assets/
-│   ├── services/
-│   ├── Home.py
-│   └── requirements.txt
+│   ├── public/
+│   ├── src/
+│   │   ├── assets/
+│   │   ├── components/
+│   │   ├── context/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   ├── styles/
+│   │   ├── utils/
+│   │   ├── App.jsx
+│   │   ├── main.jsx
+│   │   └── index.css
+│   ├── .env.example
+│   ├── index.html
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── vite.config.js
+│   └── README.md
 │
 ├── ticket-triage-assistant/
 │   ├── ingestion/
@@ -357,13 +379,32 @@ Intelligent-ticket-triage-assitant/
 │   ├── reset-password/
 │   ├── get-order-status/
 │   ├── template.yaml
-│   └── samconfig.toml
+│   ├── samconfig.toml
+│   └── requirements.txt
+│
+├── architecture/
+│   └── Architecture.png
+│
+├── screenshots/
+│   ├── login.png
+│   ├── customer-dashboard.png
+│   ├── create-ticket.png
+│   ├── my-tickets-page.png
+│   ├── ticket-details-page.png
+│   ├── support-home-page.png
+│   ├── support-dashboard.png
+│   ├── orders-dashboard.png
+│   └── approval-dashboard.png
 │
 ├── demo/
+│   └── demo.gif
+│
 ├── docs/
+│
+├── .gitignore
 ├── .env.example
 ├── README.md
-└── .gitignore
+└── LICENSE
 ```
 
 ---
@@ -385,12 +426,55 @@ sam deploy
 ## Frontend
 
 ```bash
-cd TicketTriageUI
+cd TicketTriageUIReact
 
-pip install -r requirements.txt
+npm install
 
-streamlit run Home.py
+npm run dev
 ```
+
+---
+
+# Deployment
+
+## Frontend
+
+The React frontend is deployed using **AWS Amplify**.
+
+AWS Amplify provides:
+
+- Automatic builds
+- Continuous deployment from GitHub
+- Secure HTTPS hosting
+- Managed frontend deployment
+
+Every push to the connected GitHub repository automatically triggers a new build and deployment.
+
+---
+
+## Backend
+
+The backend infrastructure is deployed using **AWS SAM**.
+
+Deploy using:
+
+```bash
+cd ticket-triage-assistant
+
+sam build
+
+sam deploy
+```
+
+The backend provisions:
+
+- API Gateway
+- AWS Lambda Functions
+- Amazon DynamoDB
+- Amazon SQS
+- Amazon S3
+- Amazon SNS
+- IAM Roles
 
 ---
 

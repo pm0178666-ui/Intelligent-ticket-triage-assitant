@@ -91,6 +91,9 @@ def lambda_handler(event, context):
 
                 return {
                     "statusCode": 404,
+                    "headers": {
+                        "Access-Control-Allow-Origin": "*"
+                    },
                     "body": json.dumps({
                         "message": "Ticket not found"
                     })
@@ -98,6 +101,9 @@ def lambda_handler(event, context):
 
             return {
                 "statusCode": 200,
+                "headers": {
+                    "Access-Control-Allow-Origin": "*"
+                },
                 "body": json.dumps(
                     item,
                     default=str
@@ -312,7 +318,13 @@ def lambda_handler(event, context):
         if upload_url:
             response_body["uploadUrl"] = upload_url
 
-        return {"statusCode": 200, "body": json.dumps(response_body)}
+        return {
+            "statusCode": 200,
+            "headers": {
+                "Access-Control-Allow-Origin": "*"
+            },
+            "body": json.dumps(response_body)
+        }
 
     except Exception as e:
         logger.error("Unhandled exception: %s", str(e))

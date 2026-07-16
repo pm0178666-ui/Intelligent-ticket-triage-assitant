@@ -18,7 +18,22 @@ def decimal_converter(obj):
     raise TypeError
 
 
+def response(status_code, body):
+    return {
+        "statusCode": status_code,
+        "headers": {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "Content-Type,Authorization",
+            "Access-Control-Allow-Methods": "GET,POST,OPTIONS"
+        },
+        "body": json.dumps(body, default=decimal_converter)
+    }
+
+
 def lambda_handler(event, context):
+
+    if event.get("httpMethod") == "OPTIONS":
+        return response(200, {})
 
     print("EVENT:", event)
 
@@ -28,20 +43,14 @@ def lambda_handler(event, context):
     action = params.get("action")  # approve / reject
 
     if not approval_id or not action:
-        return {
-            "statusCode": 400,
-            "body": json.dumps("Missing approvalId or action")
-        }
+        return response(400, "Missing approvalId or action")
 
     # Fetch approval request
-    response = table.get_item(Key={"approvalId": approval_id})
+    db_response = table.get_item(Key={"approvalId": approval_id})
     item = response.get("Item")
 
     if not item:
-        return {
-            "statusCode": 404,
-            "body": json.dumps("Approval not found")
-        }
+        return response(404, "Approval not found")
 
     # Decide status
     new_status = "APPROVED" if action == "approve" else "REJECTED"
@@ -58,13 +67,10 @@ def lambda_handler(event, context):
 
     # If rejected → stop flow
     if new_status == "REJECTED":
-        return {
-            "statusCode": 200,
-            "body": json.dumps({
-                "message": "Request REJECTED",
-                "approvalId": approval_id
-            })
-        }
+        return response(200, {
+            "message": "Request REJECTED",
+            "approvalId": approval_id
+    })
 
     # Approved → execute tool
     action_type = item.get("actionType")
@@ -90,23 +96,14 @@ def lambda_handler(event, context):
             )
 
         else:
-            return {
-                "statusCode": 400,
-                "body": json.dumps("Unknown actionType")
-            }
+            return response(400, "Unknown actionType")
 
     except Exception as e:
         print("Tool execution failed:", str(e))
-        return {
-            "statusCode": 500,
-            "body": json.dumps("Tool execution failed")
-        }
+        return response(500, "Tool execution failed")
 
-    return {
-        "statusCode": 200,
-        "body": json.dumps({
-            "message": "Approved and executed successfully",
-            "approvalId": approval_id,
-            "actionType": action_type
-        })
-    }
+    return response(200, {
+        "message": "Approved and executed successfully",
+        "approvalId": approval_id,
+        "actionType": action_type
+})

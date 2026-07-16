@@ -95,6 +95,10 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: Prod
+      Cors:
+        AllowMethods: "'GET,POST,OPTIONS'"
+        AllowHeaders: "'Content-Type,Authorization'"
+        AllowOrigin: "'http://localhost:5173'"
 
   # =========================
   # 6. LAMBDA-1 INGESTION
