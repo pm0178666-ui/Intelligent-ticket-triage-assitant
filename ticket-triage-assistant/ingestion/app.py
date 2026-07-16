@@ -53,6 +53,18 @@ def lambda_handler(event, context):
             "httpMethod"
         )
 
+        # Handle CORS preflight request
+        if http_method == "OPTIONS":
+            return {
+                "statusCode": 200,
+                "headers": {
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Headers": "Content-Type,Authorization",
+                    "Access-Control-Allow-Methods": "GET,POST,PUT,DELETE,OPTIONS"
+                },
+                "body": ""
+            }
+
         path = event.get(
             "resource",
             ""
@@ -218,6 +230,9 @@ def lambda_handler(event, context):
 
             return {
                 "statusCode": 200,
+                "headers": {
+                    "Access-Control-Allow-Origin": "*"
+                },
                 "body": json.dumps({
                     "message": "Ticket updated successfully"
                 })
@@ -235,15 +250,16 @@ def lambda_handler(event, context):
                 }
             )
 
+
             return {
                 "statusCode": 200,
+                "headers": {
+                    "Access-Control-Allow-Origin": "*"
+                },
                 "body": json.dumps({
                     "message": "Ticket deleted successfully"
                 })
-            }
-        
-
-        
+            }          
 
 
         # ==========================
@@ -331,6 +347,9 @@ def lambda_handler(event, context):
         logger.error(traceback.format_exc())
         return {
             "statusCode": 500,
+            "headers": {
+                "Access-Control-Allow-Origin": "*"
+            },
             "body": json.dumps({
                 "message": "Internal Server Error",
                 "error": str(e)

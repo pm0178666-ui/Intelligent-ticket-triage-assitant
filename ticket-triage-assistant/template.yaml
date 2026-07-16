@@ -98,7 +98,7 @@ Resources:
       Cors:
         AllowMethods: "'GET,POST,OPTIONS'"
         AllowHeaders: "'Content-Type,Authorization'"
-        AllowOrigin: "'http://localhost:5173'"
+        AllowOrigin: "'*'"
 
   # =========================
   # 6. LAMBDA-1 INGESTION
