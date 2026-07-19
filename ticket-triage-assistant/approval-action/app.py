@@ -23,8 +23,8 @@ def response(status_code, body):
         "statusCode": status_code,
         "headers": {
             "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Headers": "Content-Type,Authorization",
-            "Access-Control-Allow-Methods": "GET,POST,OPTIONS"
+            "Access-Control-Allow-Headers": "*",
+            "Access-Control-Allow-Methods": "*"
         },
         "body": json.dumps(body, default=decimal_converter)
     }
@@ -47,7 +47,7 @@ def lambda_handler(event, context):
 
     # Fetch approval request
     db_response = table.get_item(Key={"approvalId": approval_id})
-    item = response.get("Item")
+    item = db_response.get("Item")
 
     if not item:
         return response(404, "Approval not found")
@@ -70,7 +70,7 @@ def lambda_handler(event, context):
         return response(200, {
             "message": "Request REJECTED",
             "approvalId": approval_id
-    })
+        })
 
     # Approved → execute tool
     action_type = item.get("actionType")
