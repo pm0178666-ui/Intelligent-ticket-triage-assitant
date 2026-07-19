@@ -1,0 +1,51 @@
+id,subject,description,expected_category,expected_priority,expected_sentiment,expected_tool,approval_required
+1,Password Reset Help,"I forgot my password. Can you tell me how to reset it?",Password Reset Enquiry,Low,Neutral,NONE,No
+2,Password Recovery,"I can't remember my password. Please explain the password recovery process.",Password Reset Enquiry,Low,Neutral,NONE,No
+3,Reset Password Guide,"How can I reset my account password?",Password Reset Enquiry,Low,Neutral,NONE,No
+4,Password Assistance,"Where can I find the Forgot Password option?",Password Reset Enquiry,Low,Neutral,NONE,No
+5,Reset Link,"How long is the password reset link valid?",Password Reset Enquiry,Low,Neutral,NONE,No
+6,Account Help,"Can you explain the password reset steps?",Password Reset Enquiry,Low,Neutral,NONE,No
+7,Password Query,"Does password reset require email verification?",Password Reset Enquiry,Low,Neutral,NONE,No
+8,Recover Account,"I need instructions to recover access to my account.",Password Reset Enquiry,Low,Neutral,NONE,No
+9,Password Information,"Can I reset my password from the login page?",Password Reset Enquiry,Low,Neutral,NONE,No
+10,Need Help,"Please tell me how to change my password.",Password Reset Enquiry,Low,Neutral,NONE,No
+11,Password Support,"What should I do if I forget my password again?",Password Reset Enquiry,Low,Neutral,NONE,No
+12,Reset Instructions,"Can you guide me through resetting my password?",Password Reset Enquiry,Low,Neutral,NONE,No
+13,Password Recovery Help,"Is password recovery available on the mobile app?",Password Reset Enquiry,Low,Neutral,NONE,No
+14,Login Problem,"How do I regain access if I forgot my password?",Password Reset Enquiry,Medium,Neutral,NONE,No
+15,Password Question,"I need information about password recovery.",Password Reset Enquiry,Low,Neutral,NONE,No
+16,Reset Password,"Please reset my password immediately.",Password Reset,High,Negative,PASSWORD_RESET,Yes
+17,Unable to Login,"I can't log in. Please reset my password.",Password Reset,High,Negative,PASSWORD_RESET,Yes
+18,Password Reset Request,"Reset my account password.",Password Reset,Medium,Negative,PASSWORD_RESET,Yes
+19,Forgot Password,"Please reset my password so I can access my account.",Password Reset,Medium,Negative,PASSWORD_RESET,Yes
+20,Login Issue,"Kindly reset my password.",Password Reset,Medium,Negative,PASSWORD_RESET,Yes
+21,Password Problem,"I forgot my password. Reset it for me.",Password Reset,Medium,Negative,PASSWORD_RESET,Yes
+22,Account Locked,"My account is locked. Please reset my password.",Password Reset,High,Negative,PASSWORD_RESET,Yes
+23,Password Reset Needed,"I need my password reset immediately.",Password Reset,High,Negative,PASSWORD_RESET,Yes
+24,Reset Credentials,"Reset my login credentials.",Password Reset,Medium,Negative,PASSWORD_RESET,Yes
+25,Cannot Sign In,"Please initiate a password reset.",Password Reset,Medium,Negative,PASSWORD_RESET,Yes
+26,Password Assistance Required,"Help me by resetting my password.",Password Reset,Medium,Negative,PASSWORD_RESET,Yes
+27,Login Access,"Reset my password today.",Password Reset,Medium,Negative,PASSWORD_RESET,Yes
+28,Urgent Login Issue,"I urgently need my password reset.",Password Reset,High,Negative,PASSWORD_RESET,Yes
+29,Account Recovery,"Please perform a password reset.",Password Reset,Medium,Negative,PASSWORD_RESET,Yes
+30,Access Request,"I need to regain access. Reset my password.",Password Reset,Medium,Negative,PASSWORD_RESET,Yes
+31,Order Status,"Can you check the status of my order?\nOrder ID: ORD1001",Order Status,Low,Neutral,ORDER_STATUS,No
+32,Track Order,"Please track my order.\nOrder ID: ORD1002",Order Status,Low,Neutral,ORDER_STATUS,No
+33,Shipment Status,"I'd like to know where my order is.\nOrder ID: ORD1003",Order Status,Medium,Neutral,ORDER_STATUS,No
+34,Delivery Update,"Provide the latest update for my order.\nOrder ID: ORD1004",Order Status,Medium,Neutral,ORDER_STATUS,No
+35,Package Tracking,"Can you tell me the current status?\nOrder ID: ORD1005",Order Status,Low,Neutral,ORDER_STATUS,No
+36,Order Tracking,"I need my shipment details.\nOrder ID: ORD1006",Order Status,Low,Neutral,ORDER_STATUS,No
+37,Delivery Check,"Has my order been delivered?\nOrder ID: ORD1008",Order Status,Medium,Neutral,ORDER_STATUS,No
+38,Shipping Status,"Please check my order.\nOrder ID: ORD1009",Order Status,Low,Neutral,ORDER_STATUS,No
+39,Order Progress,"I want to know my order progress.\nOrder ID: ORD1001",Order Status,Low,Neutral,ORDER_STATUS,No
+40,Current Order Status,"Please provide my latest shipment status.\nOrder ID: ORD1002",Order Status,Low,Neutral,ORDER_STATUS,No
+41,Refund Request,"I would like a refund for my order.\nOrder ID: ORD1001\nAmount: 299",Refund,High,Negative,ISSUE_REFUND,Yes
+42,Refund Required,"Please initiate a refund.\nOrder ID: ORD1002\nAmount: 499",Refund,High,Negative,ISSUE_REFUND,Yes
+43,Return Payment,"Kindly refund the following order.\nOrder ID: ORD1003\nAmount: 999",Refund,High,Negative,ISSUE_REFUND,Yes
+44,Refund Cancelled Order,"Refund my cancelled order.\nOrder ID: ORD1004\nAmount: 199",Refund,High,Negative,ISSUE_REFUND,Yes
+45,Damaged Product Refund,"The product arrived damaged. Please refund it.\nOrder ID: ORD1005\nAmount: 799",Refund,High,Negative,ISSUE_REFUND,Yes
+46,Refund My Purchase,"Please return my payment.\nOrder ID: ORD1006\nAmount: 1299",Refund,High,Negative,ISSUE_REFUND,Yes
+47,Refund Needed,"I want a refund for this purchase.\nOrder ID: ORD1008\nAmount: 599",Refund,High,Negative,ISSUE_REFUND,Yes
+48,Refund Process,"Please issue a refund.\nOrder ID: ORD1009\nAmount: 899",Refund,High,Negative,ISSUE_REFUND,Yes
+49,Cancel and Refund,"Cancel this order and refund me.\nOrder ID: ORD1001\nAmount: 299",Refund,High,Negative,ISSUE_REFUND,Yes
+50,Money Back Request,"I'd like my payment returned.\nOrder ID: ORD1002\nAmount: 499",Refund,High,Negative,ISSUE_REFUND,Yes

@@ -1,0 +1,11 @@
+========== EVALUATION SUMMARY ==========
+
+Tickets Evaluated : 50
+Success Rate      : 100.0%
+Category Accuracy : 98.0%
+Priority Accuracy : 44.0%
+Sentiment Accuracy: 58.0%
+Draft Responses   : 100.0%
+Average Latency   : 4.57 sec
+Fastest Ticket    : 3.87 sec
+Slowest Ticket    : 7.58 sec

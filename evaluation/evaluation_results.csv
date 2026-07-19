@@ -1,0 +1,51 @@
+ticketId,subject,expected_category,actual_category,category_match,expected_priority,actual_priority,priority_match,expected_sentiment,actual_sentiment,sentiment_match,processing_status,latency_seconds,draft_generated
+df0ad6a2-aec2-4309-a6f7-0b5cf8641bc6,Password Reset Help,Password Reset Enquiry,Account Management,True,Low,Medium,False,Neutral,Neutral,True,processed,7.14,Yes
+5b099020-a242-4c0f-ac15-ec0d6a469c44,Password Recovery,Password Reset Enquiry,Account Access,True,Low,Medium,False,Neutral,Neutral,True,processed,7.26,Yes
+a9ddb098-168c-4dfc-9a8a-cc1a85cbbe5d,Reset Password Guide,Password Reset Enquiry,Account Management,True,Low,Medium,False,Neutral,Neutral,True,processed,4.2,Yes
+0b65df73-3b46-4a0c-8556-27c9b5dccd70,Password Assistance,Password Reset Enquiry,Account Access,True,Low,Medium,False,Neutral,Neutral,True,processed,4.02,Yes
+4a69b88c-6c8d-4acf-adfd-ba75a207b4a3,Reset Link,Password Reset Enquiry,Technical Support,True,Low,Medium,False,Neutral,Neutral,True,processed,4.2,Yes
+1c97af06-4e13-42a2-a703-43eaa3c88afa,Account Help,Password Reset Enquiry,Account Help,True,Low,Medium,False,Neutral,Neutral,True,processed,4.38,Yes
+80379d5e-3b73-49d9-a41d-3094923099dd,Password Query,Password Reset Enquiry,Account Management,True,Low,Medium,False,Neutral,Neutral,True,processed,4.21,Yes
+568a4b8f-5ce0-4672-802b-fccb18fc960a,Recover Account,Password Reset Enquiry,Account Recovery,True,Low,High,False,Neutral,Neutral,True,processed,7.58,Yes
+48cb25e4-8d45-4773-8cf6-6ae5eaa299b1,Password Information,Password Reset Enquiry,Account Management,True,Low,Medium,False,Neutral,Neutral,True,processed,4.14,Yes
+af38a1ee-b91c-4083-8383-a9c5f310001e,Need Help,Password Reset Enquiry,Account Management,True,Low,Medium,False,Neutral,Neutral,True,processed,4.98,Yes
+644735ab-83a9-4abe-a253-1ec1117536b3,Password Support,Password Reset Enquiry,Password Support,True,Low,Medium,False,Neutral,Neutral,True,processed,4.81,Yes
+8de9e2a6-6fb5-4c44-ad8d-c4d578f73ae5,Reset Instructions,Password Reset Enquiry,Account Management,True,Low,Medium,False,Neutral,Neutral,True,processed,4.2,Yes
+ef8ac330-a207-444f-afeb-66cbda788062,Password Recovery Help,Password Reset Enquiry,Account Access,True,Low,Medium,False,Neutral,Neutral,True,processed,4.2,Yes
+50ae05ee-19c1-4698-8936-f6f26494bad5,Login Problem,Password Reset Enquiry,Account Access,True,Medium,High,False,Neutral,Neutral,True,processed,4.4,Yes
+a73cb6a7-7676-46f2-8dd2-2f2c6a4faf4f,Password Question,Password Reset Enquiry,Account Access,True,Low,Medium,False,Neutral,Neutral,True,processed,4.61,Yes
+f844507e-0fd8-416e-85e9-57362d9a2319,Reset Password,Password Reset,Account Management,True,High,High,True,Negative,Urgent,False,processed,4.4,Yes
+410cda47-fe6d-4f01-81b1-9b4aff6657ae,Unable to Login,Password Reset,Account Access,True,High,High,True,Negative,Negative,True,processed,4.02,Yes
+c35a50d6-354a-4a78-aaae-41c57d78fd55,Password Reset Request,Password Reset,Account Management,True,Medium,Medium,True,Negative,Neutral,False,processed,4.13,Yes
+d59201b8-f318-4d03-8560-9c04365e7d41,Forgot Password,Password Reset,Account Access,True,Medium,Medium,True,Negative,Neutral,False,processed,4.2,Yes
+79cb7407-edbc-47e3-a171-e5026f3bfc54,Login Issue,Password Reset,Account Management,True,Medium,High,False,Negative,Neutral,False,processed,4.03,Yes
+0e44f471-75ca-4ee0-8a4c-d54a94d99f8d,Password Problem,Password Reset,Account Access,True,Medium,Medium,True,Negative,Neutral,False,processed,3.89,Yes
+49c9f85a-30ba-414f-a4fc-ebb712c8c470,Account Locked,Password Reset,Account Issues,True,High,High,True,Negative,Neutral,False,processed,4.71,Yes
+e499a6c0-5f1d-4f06-ae04-78e75510a432,Password Reset Needed,Password Reset,Account Management,True,High,High,True,Negative,Urgent,False,processed,4.1,Yes
+4a0f2936-8df0-4c83-9070-60bbb2fb3162,Reset Credentials,Password Reset,Account Management,True,Medium,Medium,True,Negative,Neutral,False,processed,4.57,Yes
+3b28f22b-e1b8-40e9-8532-18ef8e6c04db,Cannot Sign In,Password Reset,Account Access,True,Medium,High,False,Negative,Neutral,False,processed,4.2,Yes
+64c96186-3477-415b-95a9-76225e39582a,Password Assistance Required,Password Reset,Account Management,True,Medium,High,False,Negative,Neutral,False,processed,4.14,Yes
+b3679569-cbcb-44a4-83cd-259156b5bdfe,Login Access,Password Reset,Account Access,True,Medium,High,False,Negative,Neutral,False,processed,4.31,Yes
+3b3da15a-77a5-466b-9850-219af3d329f4,Urgent Login Issue,Password Reset,Account Access,True,High,High,True,Negative,Urgent,False,processed,4.4,Yes
+9da6eb41-d00c-4f05-8531-f64dae226ef4,Account Recovery,Password Reset,Account Recovery,True,Medium,High,False,Negative,Neutral,False,processed,4.2,Yes
+0aa2fa0a-4bba-4c60-b2df-e25481f89c7b,Access Request,Password Reset,Access Request,True,Medium,Medium,True,Negative,Neutral,False,processed,4.2,Yes
+620386c6-ef8d-4890-a888-57960380c2f3,Order Status,Order Status,Order Status,True,Low,Medium,False,Neutral,Neutral,True,processed,7.17,Yes
+388fea65-35ee-4375-a5a6-4d474045063a,Track Order,Order Status,Order Tracking,True,Low,Medium,False,Neutral,Neutral,True,processed,4.14,Yes
+b60a2e64-442f-45c9-82f2-ab081e063d7c,Shipment Status,Order Status,Order Status,True,Medium,Medium,True,Neutral,Neutral,True,processed,4.1,Yes
+b3b82eb6-b587-41d3-b317-c3889b74c7a9,Delivery Update,Order Status,Order Update,True,Medium,Medium,True,Neutral,Neutral,True,processed,4.4,Yes
+f0e1ed25-031c-4a9c-be3f-ae5e210540bf,Package Tracking,Order Status,Package Tracking,True,Low,Medium,False,Neutral,Neutral,True,processed,4.81,Yes
+b97a2c0a-ce4f-4099-9e7a-763f8f76dd22,Order Tracking,Order Status,Order Tracking,True,Low,Medium,False,Neutral,Neutral,True,processed,4.09,Yes
+9277f4f5-d6e3-4a9d-b531-a629c94cf07e,Delivery Check,Order Status,Delivery Inquiry,True,Medium,Medium,True,Neutral,Neutral,True,processed,3.87,Yes
+db095532-2037-4613-91f1-64717584b646,Shipping Status,Order Status,Shipping,True,Low,Medium,False,Neutral,Neutral,True,processed,4.52,Yes
+fa650011-8b6b-4139-b3fb-73f0df0ee81e,Order Progress,Order Status,Order Inquiry,True,Low,Medium,False,Neutral,Neutral,True,processed,4.21,Yes
+d90585ea-9895-4647-ba30-2acb62e40293,Current Order Status,Order Status,Order Status,True,Low,Medium,False,Neutral,Neutral,True,processed,4.38,Yes
+a87fbd30-232a-4d6c-aea1-c5950c2aff8c,Refund Request,Refund,Refund,True,High,Medium,False,Negative,Neutral,False,processed,4.6,Yes
+6b01cee3-4307-4eb1-ab2f-b4f07ecadb58,Refund Required,Refund,Refund,True,High,High,True,Negative,Neutral,False,processed,4.84,Yes
+12e97561-7211-4a7e-8ffa-63dd66f2e910,Return Payment,Refund,Refund Request,True,High,High,True,Negative,Neutral,False,processed,4.29,Yes
+505005cb-fc07-4190-8b5f-fa5da1e65aa1,Refund Cancelled Order,Refund,Refund,True,High,High,True,Negative,Neutral,False,processed,4.43,Yes
+cfa1fdbd-5ab8-4561-abe9-dfa1ca3d1417,Damaged Product Refund,Refund,Refunds/Returns,False,High,High,True,Negative,Negative,True,processed,4.46,Yes
+98df9c1b-e774-46ae-a115-e4121b8aad53,Refund My Purchase,Refund,Refund,True,High,High,True,Negative,Neutral,False,processed,4.02,Yes
+12f1deae-bf83-409f-afdc-7d76a8d37e98,Refund Needed,Refund,Refund,True,High,High,True,Negative,Negative,True,processed,4.2,Yes
+21d3f940-3370-4fe5-85f6-8e8d73b12cb0,Refund Process,Refund,Refund,True,High,High,True,Negative,Neutral,False,processed,4.45,Yes
+0900b931-7482-4f19-957f-b18385e241ac,Cancel and Refund,Refund,Refund,True,High,High,True,Negative,Negative,True,processed,5.42,Yes
+76d7ca15-1db6-4ea1-a613-81bfd3918882,Money Back Request,Refund,Refund/Return,True,High,High,True,Negative,Neutral,False,processed,4.49,Yes

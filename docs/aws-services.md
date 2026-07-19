@@ -16,7 +16,7 @@ Amazon Cognito provides secure user authentication and authorization for the app
 
 ## Role in the Project
 
-- Authenticates users during login.
+- Authenticates users through the React frontend application during login.
 - Manages user accounts and credentials.
 - Generates JWT tokens after successful authentication.
 - Implements role-based access control using Cognito User Groups.
@@ -38,7 +38,34 @@ Customers can access ticket creation and tracking features, while Support users 
 
 ---
 
-# 2. Amazon API Gateway
+# 2. AWS Amplify Hosting
+
+## Purpose
+
+AWS Amplify Hosting provides hosting and deployment for the React frontend application.
+
+## Role in the Project
+
+AWS Amplify is used for:
+
+- Hosting the React + Vite frontend application
+- Building the frontend application from the source repository
+- Providing HTTPS-based web access
+- Automating frontend deployment through CI/CD workflows
+
+The deployed frontend communicates with backend REST APIs through Amazon API Gateway.
+
+## Benefits
+
+- Managed frontend hosting
+- Git-based continuous deployment
+- Automatic build and deployment pipeline
+- HTTPS enabled hosting
+- Scalable frontend delivery
+
+---
+
+# 3. Amazon API Gateway
 
 ## Purpose
 
@@ -46,7 +73,7 @@ Amazon API Gateway serves as the secure entry point for all frontend requests.
 
 ## Role in the Project
 
-- Receives HTTP requests from the Streamlit application.
+- Receives authenticated HTTP requests from the React frontend application.
 - Routes requests to AWS Lambda functions.
 - Handles REST API communication.
 - Provides a scalable interface between the frontend and backend.
@@ -60,7 +87,7 @@ Amazon API Gateway serves as the secure entry point for all frontend requests.
 
 ---
 
-# 3. AWS Lambda
+# 4. AWS Lambda
 
 ## Purpose
 
@@ -106,7 +133,7 @@ Used by Amazon Bedrock Agents to execute business operations such as:
 
 ---
 
-# 4. Amazon SQS
+# 5. Amazon SQS
 
 ## Purpose
 
@@ -128,7 +155,7 @@ The Processor Lambda retrieves messages from the queue and processes them indepe
 
 ---
 
-# 5. Amazon DynamoDB
+# 6. Amazon DynamoDB
 
 ## Purpose
 
@@ -160,7 +187,7 @@ The application retrieves this information to display dashboards and ticket deta
 
 ---
 
-# 6. Amazon S3
+# 7. Amazon S3
 
 ## Purpose
 
@@ -187,7 +214,7 @@ Documents used by Amazon Bedrock Knowledge Base are stored in S3 for Retrieval-A
 
 ---
 
-# 7. Amazon Bedrock
+# 8. Amazon Bedrock
 
 ## Purpose
 
@@ -215,7 +242,7 @@ These results are stored in DynamoDB and displayed in the application dashboards
 
 ---
 
-# 8. Amazon Bedrock Knowledge Base
+# 9. Amazon Bedrock Knowledge Base
 
 ## Purpose
 
@@ -236,7 +263,7 @@ This ensures that AI-generated answers are based on organizational knowledge ins
 
 ---
 
-# 9. Amazon Bedrock Agent
+# 10. Amazon Bedrock Agent
 
 ## Purpose
 
@@ -266,7 +293,7 @@ Implemented action groups include:
 
 ---
 
-# 10. Amazon SNS
+# 11. Amazon SNS
 
 ## Purpose
 
@@ -287,7 +314,7 @@ Amazon SNS sends the password reset email to the user, completing the workflow.
 
 ---
 
-# 11. AWS SAM
+# 12. AWS SAM
 
 ## Purpose
 
@@ -316,7 +343,7 @@ Infrastructure is defined as code using the `template.yaml` file.
 
 ---
 
-# 12. AWS IAM
+# 13. AWS IAM
 
 ## Purpose
 
@@ -345,6 +372,6 @@ The application follows the principle of least privilege by assigning only the p
 
 # Summary
 
-The AI Ticket Triage Assistant leverages a combination of AWS serverless, storage, AI, security, and messaging services to build a scalable and intelligent support automation platform.
+The AI Ticket Triage Assistant leverages AWS frontend hosting, serverless compute, storage, AI, security, and messaging services to build a scalable and intelligent support automation platform.
 
 Each AWS service has a well-defined responsibility, enabling the application to remain modular, secure, cost-efficient, and easy to maintain while providing AI-powered ticket analysis and automated support workflows.

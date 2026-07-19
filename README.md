@@ -1,29 +1,33 @@
-#  Intelligent Ticket Triage Assistant
+# Intelligent Ticket Triage Assistant2
 
 
 ![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python)
 ![AWS](https://img.shields.io/badge/AWS-Serverless-orange?logo=amazonaws)
 ![Amazon Bedrock](https://img.shields.io/badge/Amazon-Bedrock-FF9900)
 ![AWS SAM](https://img.shields.io/badge/AWS-SAM-red)
-![Streamlit](https://img.shields.io/badge/Frontend-Streamlit-FF4B4B?logo=streamlit)
+![React](https://img.shields.io/badge/Frontend-React-blue?logo=react)
+![Vite](https://img.shields.io/badge/Build-Vite-purple?logo=vite)
+![AWS Amplify](https://img.shields.io/badge/AWS-Amplify-orange?logo=awsamplify)
 ![License](https://img.shields.io/badge/License-Educational-green)
 
-An AI-powered customer support system built using **AWS Serverless** and **Amazon Bedrock** that automatically classifies support tickets, retrieves knowledge-based answers, performs operational tasks through AI Agents, and manages approval workflows using a Human-in-the-Loop approach.
+
+An AI-powered customer support system built using **AWS Serverless, React, and Amazon Bedrock** that automatically classifies support tickets, retrieves knowledge-based answers, performs operational tasks through AI Agents, and manages approval workflows using a Human-in-the-Loop approach.
 
 The project demonstrates modern **Agentic AI architecture** by integrating Amazon Bedrock Agents with AWS serverless services to automate customer support operations while keeping humans involved for sensitive actions such as refunds and password resets.
 
+The frontend application is developed using **React with Vite** and deployed using **AWS Amplify**. User authentication is implemented using **Amazon Cognito**, supporting customer registration, email verification, secure login, and role-based access control.
+
 ---
 
-#  Project Overview
+# Project Overview
 
-The Intelligent Ticket Triage Assistant enables customers to raise support tickets through a web interface while AI automatically analyzes the request, determines its category and priority, retrieves relevant information from the Knowledge Base, or executes business actions using Amazon Bedrock Agent Action Groups.
+The Intelligent Ticket Triage Assistant enables customers to raise support tickets through a modern web interface while AI automatically analyzes the request, determines its category and priority, retrieves relevant information from the Knowledge Base, or executes business actions using Amazon Bedrock Agent Action Groups.
 
 The solution is built on a completely serverless AWS architecture and uses Retrieval Augmented Generation (RAG) for answering policy and documentation-related queries.
 
 ---
 
-
-#  Table of Contents
+# Table of Contents
 
 - [Project Overview](#-project-overview)
 - [Features](#-features)
@@ -35,17 +39,18 @@ The solution is built on a completely serverless AWS architecture and uses Retri
 - [Running the Project](#️-running-the-project)
 - [Environment Variables](#-environment-variables)
 - [Security](#-security)
-- [Design Decisions](#-design-decisions)
+- [Model Evaluation](#-model-evaluation)
 - [Future Enhancements](#-future-enhancements)
 - [Demo](#-demo)
 - [Screenshots](#-screenshots)
 - [Author](#-author)
 
 
+---
 
-#  Features
+# Features
 
-- Modern React-based User Interface
+- Modern React + Vite User Interface
 - Frontend deployment using AWS Amplify
 - Secure REST API integration
 - AI-powered ticket classification
@@ -60,12 +65,15 @@ The solution is built on a completely serverless AWS architecture and uses Retri
 - Attachment upload to Amazon S3
 - Customer Dashboard
 - Support Dashboard
+- Customer Sign Up functionality
+- Email verification using Amazon Cognito
 - Role-based authentication using Amazon Cognito
 - Serverless deployment using AWS SAM
 
+
 ---
 
-#  Architecture
+# Architecture
 
 The application follows an event-driven serverless architecture.
 
@@ -73,9 +81,10 @@ The application follows an event-driven serverless architecture.
 
 ![AWS Architecture](architecture/Architecture.png)
 
+
 ---
 
-#  AWS Services Used
+# AWS Services Used
 
 | Service | Purpose |
 |----------|----------|
@@ -87,10 +96,10 @@ The application follows an event-driven serverless architecture.
 | Amazon S3 | Attachments & Knowledge Base Documents |
 | Amazon Bedrock Agent | AI Orchestration |
 | Amazon Bedrock Knowledge Base | Retrieval Augmented Generation |
-| Amazon Cognito | Authentication |
+| Amazon Cognito | User Registration, Authentication and Authorization |
 | Amazon SNS | Notifications |
 | Amazon SES | Password Reset Emails |
-| AWS Amplify | Frontend Hosting & Continuous Deployment |
+| AWS Amplify | React Frontend Hosting & Continuous Deployment |
 | IAM | Permissions |
 
 ---
@@ -104,6 +113,8 @@ The application follows an event-driven serverless architecture.
 - React Router
 - Axios
 - CSS
+- AWS Amplify Hosting
+
 
 ### Backend
 
@@ -112,27 +123,31 @@ The application follows an event-driven serverless architecture.
 - AWS SAM
 - API Gateway
 
+
 ### AI
 
 - Amazon Bedrock Agent
 - Amazon Bedrock Knowledge Base
 - Amazon Nova Lite
 
+
 ### Database
 
 - Amazon DynamoDB
+
 
 ### Storage
 
 - Amazon S3
 
+
 ### Authentication
 
-- Amazon Cognito
+- Amazon Cognito User Pools
 
 ---
 
-#  Project Workflow
+# Project Workflow
 
 ## 1. Infrastructure Deployment
 
@@ -159,12 +174,42 @@ sam deploy
 
 ## 2. Customer Authentication
 
-Customers log in through Amazon Cognito.
+Customers authenticate through **Amazon Cognito User Pools**.
+
+Authentication workflow:
+
+- User Sign Up
+- Email verification
+- Secure Login
+- Role-based access control
+
 
 Role-based access is implemented for:
 
 - Customer
 - Support Team
+
+---
+
+## Customer Sign Up Flow
+
+The customer registration process:
+
+```
+User Registration
+        |
+        v
+Amazon Cognito Sign Up
+        |
+        v
+Email Verification
+        |
+        v
+Account Activation
+        |
+        v
+Secure Login
+```
 
 ---
 
@@ -198,6 +243,8 @@ This minimizes Lambda execution time and supports larger files efficiently.
 
 ---
 
+---
+
 ## 5. Asynchronous Processing
 
 Instead of directly invoking AI, tickets are pushed into Amazon SQS.
@@ -222,6 +269,7 @@ The agent automatically performs:
 - Ticket Classification
 - Priority Detection
 - Complexity Detection
+- Sentiment Analysis
 - Customer Response Generation
 
 The processed information is stored back in DynamoDB.
@@ -255,6 +303,7 @@ Retrieves:
 
 - Order Status
 - Order Amount
+
 
 ### Approval Workflow
 
@@ -319,9 +368,12 @@ The Reset Password Lambda:
 
 ## 11. Customer Portal
 
+The React-based customer portal provides:
+
 Features include:
 
-- Modern React Interface
+- User Registration
+- Email Verification
 - User Login
 - Create Ticket
 - Upload Attachments
@@ -329,6 +381,7 @@ Features include:
 - Track Ticket Status
 - View AI Response
 - Ticket Details
+
 
 ---
 
@@ -367,8 +420,7 @@ Intelligent-ticket-triage-assistant/
 │   ├── index.html
 │   ├── package.json
 │   ├── package-lock.json
-│   ├── vite.config.js
-│   └── README.md
+│   └── vite.config.js
 │
 ├── ticket-triage-assistant/
 │   ├── ingestion/
@@ -382,11 +434,19 @@ Intelligent-ticket-triage-assistant/
 │   ├── samconfig.toml
 │   └── requirements.txt
 │
+├── evaluation/
+│   ├── evaluation_results.csv
+│   ├── reports.py
+│   ├── evaluation_report.md
+│   ├── evaluation_summary.txt
+│   └── README.md
+│
 ├── architecture/
 │   └── Architecture.png
 │
 ├── screenshots/
 │   ├── login.png
+│   ├── signup.png
 │   ├── customer-dashboard.png
 │   ├── create-ticket.png
 │   ├── my-tickets-page.png
@@ -409,7 +469,7 @@ Intelligent-ticket-triage-assistant/
 
 ---
 
-#  Running the Project
+# Running the Project
 
 ## Backend
 
@@ -426,7 +486,7 @@ sam deploy
 ## Frontend
 
 ```bash
-cd TicketTriageUIReact
+cd TicketTriageUI
 
 npm install
 
@@ -437,9 +497,21 @@ npm run dev
 
 # Deployment
 
-## Frontend
+## Frontend Deployment
 
-The React frontend is deployed using **AWS Amplify**.
+The React frontend is deployed using **AWS Amplify Hosting**.
+
+Deployment workflow:
+
+```
+GitHub Repository
+        |
+        v
+AWS Amplify Build Pipeline
+        |
+        v
+React Application Deployment
+```
 
 AWS Amplify provides:
 
@@ -452,7 +524,7 @@ Every push to the connected GitHub repository automatically triggers a new build
 
 ---
 
-## Backend
+## Backend Deployment
 
 The backend infrastructure is deployed using **AWS SAM**.
 
@@ -486,7 +558,7 @@ Copy:
 .env.example
 ```
 
-to
+to:
 
 ```
 .env
@@ -502,7 +574,35 @@ Update the required configuration values before running the application.
 - AWS Lambda runtime configuration is managed through AWS SAM.
 - Environment-specific configuration is stored separately.
 - Authentication is handled using Amazon Cognito.
+- User registration and login are secured through Cognito User Pools.
 - Password reset emails are sent securely through Amazon SES.
+- S3 uploads use secure pre-signed URLs.
+
+---
+
+# Model Evaluation
+
+The AI pipeline was evaluated using 50 customer support tickets.
+
+Evaluation metrics:
+
+| Metric | Result |
+|---|---:|
+| Tickets Evaluated | 50 |
+| Processing Success Rate | 100% |
+| Category Classification Accuracy | 98% |
+| Priority Identification Accuracy | 44% |
+| Sentiment Analysis Accuracy | 58% |
+| Response Generation Success | 100% |
+| Average Processing Latency | 4.57 seconds |
+| Fastest Processing Time | 3.87 seconds |
+| Maximum Processing Time | 7.58 seconds |
+
+Detailed evaluation documentation is available in:
+
+```
+evaluation/
+```
 
 ---
 
@@ -515,7 +615,7 @@ Update the required configuration values before running the application.
 - Real-time monitoring dashboard
 - Voice-enabled ticket creation
 - Multi-model AI comparison
-- Chat interface for customer support
+- Continuous AI evaluation pipeline
 
 ---
 
@@ -527,16 +627,19 @@ Update the required configuration values before running the application.
 <img src="demo/demo.gif" width="900">
 </p>
 
-
 ---
 
-
-
-#  Screenshots
+# Screenshots
 
 ## Login
 
 <img src="screenshots/login.png" alt="Login" width="100%">
+
+---
+
+## Sign Up
+
+<img src="screenshots/signup.png" alt="Sign Up" width="100%">
 
 ---
 
@@ -592,7 +695,7 @@ Update the required configuration values before running the application.
 
 **Padmaja**
 
-Developed as an AI-powered serverless customer support solution using AWS and Amazon Bedrock.
+Developed as an AI-powered serverless customer support solution using AWS, React, and Amazon Bedrock.
 
 ---
 

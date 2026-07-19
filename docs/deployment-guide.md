@@ -2,7 +2,9 @@
 
 ## Overview
 
-This document provides the deployment steps for the AI Ticket Triage Assistant. The application is deployed using AWS Serverless Application Model (AWS SAM) and consists of a Streamlit frontend, AWS serverless backend, Amazon Bedrock AI services, and Amazon Cognito for authentication.
+The application is deployed using AWS Serverless Application Model (AWS SAM) for backend infrastructure and AWS Amplify Hosting for the React frontend.
+
+The solution consists of a React + Vite frontend application, AWS serverless backend services, Amazon Bedrock AI services, and Amazon Cognito authentication.
 
 ---
 
@@ -13,17 +15,19 @@ Before deploying the application, ensure the following tools and services are av
 ## Software Requirements
 
 - Python 3.11
+- Node.js
+- npm
 - Git
 - AWS CLI
 - AWS SAM CLI
 - Visual Studio Code
-- Streamlit
 
 ---
 
 ## AWS Services Required
 
 - Amazon Cognito
+- AWS Amplify Hosting
 - Amazon API Gateway
 - AWS Lambda
 - Amazon DynamoDB
@@ -69,7 +73,7 @@ source venv/bin/activate
 
 ---
 
-# Install Dependencies
+# Install Backend Dependencies
 
 ```bash
 pip install -r requirements.txt
@@ -79,7 +83,7 @@ pip install -r requirements.txt
 
 # Configure AWS Credentials
 
-Configure AWS CLI.
+Configure AWS CLI:
 
 ```bash
 aws configure
@@ -89,7 +93,7 @@ Provide:
 
 - AWS Access Key
 - AWS Secret Key
-- Region
+- AWS Region
 - Output Format
 
 ---
@@ -100,11 +104,11 @@ Provide:
 sam build
 ```
 
-AWS SAM packages all Lambda functions and validates the template.
+AWS SAM packages Lambda functions and validates the infrastructure template.
 
 ---
 
-# Deploy the Application
+# Deploy Backend Application
 
 Deploy using:
 
@@ -119,34 +123,101 @@ Provide:
 - Confirm Changes
 - IAM Capability
 
-After deployment, AWS creates:
+After successful deployment, AWS provisions:
 
-- API Gateway
-- Lambda Functions
-- DynamoDB Tables
-- SQS Queue
-- S3 Bucket
+- Amazon API Gateway
+- AWS Lambda Functions
+- Amazon DynamoDB Tables
+- Amazon SQS Queue
+- Amazon S3 Bucket
 - IAM Roles
 - Amazon SES configuration
 
 ---
 
+# Deploy React Frontend using AWS Amplify
+
+The frontend application is developed using React with Vite and deployed using AWS Amplify Hosting.
+
+AWS Amplify provides managed hosting, automated builds, HTTPS access, and continuous deployment from the source repository.
+
+---
+
+## Build Frontend Locally
+
+Navigate to the frontend directory:
+
+```bash
+cd TicketTriageUI
+```
+
+Install frontend dependencies:
+
+```bash
+npm install
+```
+
+Create production build:
+
+```bash
+npm run build
+```
+
+---
+
+## Configure AWS Amplify Hosting
+
+1. Connect the GitHub repository to AWS Amplify Hosting.
+
+2. Configure the build settings for the React + Vite application.
+
+3. Add the required frontend environment variables:
+
+```env
+VITE_API_URL=https://your-api-id.execute-api.us-east-1.amazonaws.com/Prod
+VITE_COGNITO_USER_POOL_ID=us-east-1_xxxxxxxxx
+VITE_COGNITO_CLIENT_ID=xxxxxxxxxxxxxxxxxxxxxxxxxx
+VITE_AWS_REGION=us-east-1
+```
+
+4. Start the deployment.
+
+AWS Amplify automatically performs:
+
+- Installing frontend dependencies
+- Running the React + Vite build process
+- Deploying the frontend application
+- Providing secure HTTPS hosting
+
+The deployed React application communicates with backend REST APIs through Amazon API Gateway using authenticated requests with Amazon Cognito JWT tokens.
+
+---
+
 # Configure Amazon Cognito
 
-Create a User Pool.
+Create a Cognito User Pool.
 
-Create two User Groups.
+Create two User Groups:
 
-- Customer
-- Support
+- CUSTOMER
+- SUPPORT
 
 Create application users and assign them to the appropriate group.
 
-Update the frontend with:
+Configure the React frontend with:
 
-- User Pool ID
-- App Client ID
-- Region
+- Cognito User Pool ID
+- Cognito App Client ID
+- AWS Region
+
+These values are stored as frontend environment variables.
+
+Cognito provides:
+
+- User authentication
+- JWT token generation
+- Role-based access control
+- Secure API authorization
 
 ---
 
@@ -154,7 +225,13 @@ Update the frontend with:
 
 Enable access to the required foundation model.
 
-Update the Processor Lambda environment variables if necessary.
+Update the Processor Lambda environment variables if required.
+
+Verify:
+
+- Model access permissions
+- Lambda IAM permissions
+- Bedrock invocation configuration
 
 ---
 
@@ -164,8 +241,8 @@ Create a Knowledge Base.
 
 Configure:
 
-- Amazon S3 as the document source.
-- Sync documents.
+- Amazon S3 as the document source
+- Document synchronization
 
 Update the Processor Lambda with the Knowledge Base ID.
 
@@ -181,7 +258,7 @@ Create Action Groups for:
 - Issue Refund
 - Reset Password
 
-Associate each Action Group with its corresponding Lambda function.
+Associate each Action Group with the corresponding Lambda functions.
 
 Update the Processor Lambda with:
 
@@ -196,22 +273,32 @@ Verify the sender email address.
 
 If the AWS account is in SES Sandbox mode:
 
-- Verify recipient email addresses.
-- Or request production access.
+- Verify recipient email addresses
+- Or request SES production access
 
 ---
 
-# Run the Frontend
+# Run Frontend Locally (Development)
 
-Navigate to the frontend directory.
-
-Start Streamlit.
+Navigate to frontend directory:
 
 ```bash
-streamlit run app.py
+cd TicketTriageUI
 ```
 
-Open the application in your browser.
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start React development server:
+
+```bash
+npm run dev
+```
+
+The application will be available through the local development server.
 
 ---
 
@@ -219,16 +306,18 @@ Open the application in your browser.
 
 Validate the following functionality:
 
-- User login using Amazon Cognito.
-- Ticket creation.
-- Attachment upload.
-- Ticket retrieval.
-- AI ticket analysis.
-- Knowledge Base responses.
-- Agent action execution.
-- Password reset email delivery.
-- Approval workflow.
-- Dashboard updates.
+- User login using Amazon Cognito
+- Role-based access for CUSTOMER and SUPPORT users
+- Ticket creation
+- Attachment upload
+- Ticket retrieval
+- AI ticket classification
+- Priority and sentiment analysis
+- Knowledge Base responses
+- Bedrock Agent actions
+- Password reset workflow
+- Approval workflow
+- Dashboard updates
 
 ---
 
@@ -251,6 +340,7 @@ Verify:
 - Model access
 - Agent configuration
 - Knowledge Base synchronization
+- Lambda permissions
 
 ---
 
@@ -270,27 +360,60 @@ Verify:
 
 - API Gateway deployment
 - Lambda integration
-- Cognito authentication
+- Cognito JWT validation
+- CORS configuration
+
+---
+
+## Amplify Deployment Errors
+
+Check:
+
+- AWS Amplify build logs
+- Node.js version
+- npm dependencies
+- Environment variables
+- Build configuration
 
 ---
 
 # Deployment Architecture
 
-The deployment provisions:
+The deployment consists of two parts:
+
+## Frontend
+
+- AWS Amplify Hosting
+- React + Vite Application
+- Amazon Cognito Authentication
+
+## Backend
 
 - Amazon API Gateway
 - AWS Lambda Functions
 - Amazon DynamoDB Tables
 - Amazon S3 Bucket
 - Amazon SQS Queue
-- Amazon Cognito
 - Amazon Bedrock
 - Amazon Bedrock Knowledge Base
 - Amazon Bedrock Agent
+- Amazon SNS
 - Amazon SES
+- AWS IAM
 
 ---
 
 # Conclusion
 
-Following this guide deploys the AI Ticket Triage Assistant as a fully serverless application on AWS. The deployed solution provides secure authentication, AI-powered ticket processing, knowledge retrieval, and automated operational workflows while leveraging managed AWS services for scalability and maintainability.
+Following this guide deploys the AI Ticket Triage Assistant as a fully serverless application on AWS.
+
+The deployed solution provides:
+
+- Secure authentication using Amazon Cognito
+- React-based user interface hosted on AWS Amplify
+- AI-powered ticket processing using Amazon Bedrock
+- Knowledge retrieval using Bedrock Knowledge Base
+- Automated workflows using Bedrock Agents
+- Scalable backend processing using AWS serverless services
+
+The architecture enables a secure, scalable, and maintainable AI-powered ticket management platform.

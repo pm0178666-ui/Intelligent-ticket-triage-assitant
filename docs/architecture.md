@@ -4,7 +4,7 @@
 
 The AI Ticket Triage Assistant is built using a serverless, event-driven architecture on Amazon Web Services (AWS). The system combines cloud-native services with Generative AI capabilities to automate ticket management, knowledge retrieval, and operational workflows.
 
-The architecture is designed to be scalable, secure, and cost-efficient by leveraging managed AWS services such as Amazon Cognito, Amazon API Gateway, AWS Lambda, Amazon SQS, Amazon DynamoDB, Amazon S3, Amazon Bedrock, Amazon Bedrock Knowledge Base, Amazon Bedrock Agents, and Amazon SNS.
+The architecture is designed to be scalable, secure, and cost-efficient by leveraging managed AWS services such as AWS Amplify Hosting, Amazon Cognito, Amazon API Gateway, AWS Lambda, Amazon SQS, Amazon DynamoDB, Amazon S3, Amazon Bedrock, Amazon Bedrock Knowledge Base, Amazon Bedrock Agents, and Amazon SNS.
 
 ---
 
@@ -37,9 +37,11 @@ architecture/
 
 # Presentation Layer
 
-The Presentation Layer provides the user interface through a Streamlit web application.
+The Presentation Layer provides the user interface through a React application built using Vite and deployed using AWS Amplify Hosting.
 
-The application offers role-based dashboards for different types of users.
+The frontend communicates with backend services through REST APIs exposed by Amazon API Gateway.
+
+The application provides role-based dashboards for different types of users.
 
 ### Customer Features
 
@@ -50,6 +52,7 @@ The application offers role-based dashboards for different types of users.
 - Track Ticket Status
 - View Ticket Details
 
+
 ### Support Team Features
 
 - Support Dashboard
@@ -58,13 +61,39 @@ The application offers role-based dashboards for different types of users.
 - Ticket Management
 - AI Analysis Review
 
-The frontend communicates with the backend using REST APIs exposed through Amazon API Gateway.
+
+AWS Amplify provides frontend hosting, build automation, and continuous deployment from the source repository.
 
 ---
+
+
+# Frontend Deployment Architecture
+
+The React frontend is deployed using AWS Amplify Hosting.
+
+Deployment Flow:
+
+Developer
+   |
+   |
+GitHub Repository
+   |
+   |
+AWS Amplify Build Pipeline
+   |
+   |
+React Application Hosting
+   |
+   |
+End Users
+
+---
+
 
 # Authentication Layer
 
 User authentication and authorization are handled using Amazon Cognito.
+The React frontend integrates with Amazon Cognito to authenticate users and obtain JWT tokens required for accessing protected APIs.
 
 Cognito manages:
 
@@ -80,7 +109,7 @@ The application defines separate user groups for Customers and Support users, en
 
 # API Layer
 
-Amazon API Gateway acts as the entry point for all client requests.
+Amazon API Gateway acts as the entry point for all authenticated requests from the React frontend application.
 
 Responsibilities include:
 
@@ -239,20 +268,23 @@ The user receives a password reset email without requiring manual intervention.
 
 The request flow follows these steps:
 
-1. User logs in through Amazon Cognito.
-2. User submits a support ticket.
-3. API Gateway receives the request.
-4. Ticket Ingestion Lambda validates the request.
-5. Ticket metadata is stored in DynamoDB.
-6. Attachments are uploaded to Amazon S3.
-7. A processing message is published to Amazon SQS.
-8. Processor Lambda consumes the message.
-9. Amazon Bedrock performs AI analysis.
-10. Knowledge Base retrieves contextual information when required.
-11. Bedrock Agent invokes action groups for operational tasks.
-12. Updated ticket information is stored in DynamoDB.
-13. Dashboards display the latest ticket status.
-14. Password reset requests trigger Amazon SNS notifications.
+1. User accesses the React application hosted on AWS Amplify.
+2. User authenticates through Amazon Cognito.
+3. Cognito returns JWT authentication tokens.
+4. User submits a support ticket through the React UI.
+5. React frontend sends an authenticated request to API Gateway.
+6. API Gateway validates the Cognito token.
+7. Ticket Ingestion Lambda validates the request.
+8. Ticket metadata is stored in DynamoDB.
+9. Attachments are uploaded to Amazon S3.
+10. A processing message is published to Amazon SQS.
+11. Processor Lambda consumes the message.
+12. Amazon Bedrock performs AI analysis.
+13. Knowledge Base retrieves contextual information when required.
+14. Bedrock Agent invokes action groups for operational tasks.
+15. Updated ticket information is stored in DynamoDB.
+16. React dashboard displays updated ticket status.
+17. Password reset requests trigger Amazon SNS notifications.
 
 ---
 
@@ -281,10 +313,12 @@ Key security features include:
 - Amazon Cognito authentication
 - Role-based authorization
 - Secure JWT token validation
+- Amplify HTTPS hosted frontend
 - Pre-signed Amazon S3 upload URLs
 - IAM-based service permissions
 - Managed AWS services
 - Secure API Gateway endpoints
+
 
 These mechanisms protect both user data and backend resources.
 

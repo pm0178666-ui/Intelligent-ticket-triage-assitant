@@ -2,7 +2,12 @@
 
 ## Overview
 
-The AI Ticket Triage Assistant exposes a RESTful API through Amazon API Gateway. These APIs enable ticket management, approval workflows, and order retrieval while backend AI processing is handled asynchronously using Amazon SQS and AWS Lambda.
+The AI Ticket Triage Assistant exposes RESTful APIs through Amazon API Gateway.
+These APIs enable ticket management, approval workflows, and order retrieval.
+
+The React-based frontend application hosted on AWS Amplify consumes these APIs.
+Backend AI processing is handled asynchronously using Amazon SQS, AWS Lambda,
+and Amazon Bedrock services.
 
 ---
 
@@ -16,9 +21,24 @@ https://xesajug973.execute-api.us-east-1.amazonaws.com/Prod
 
 # Authentication
 
-The application uses Amazon Cognito for user authentication.
+The application uses Amazon Cognito for authentication and authorization.
 
-Authenticated users receive a JWT token, which is used to access protected API endpoints through the frontend application.
+Users authenticate through the React frontend application using Amazon Cognito.
+
+After successful authentication, Cognito issues JWT tokens which are attached
+to API requests made to Amazon API Gateway.
+
+API Gateway validates the token before forwarding requests to backend Lambda functions.
+
+User groups are used for role-based access:
+
+- CUSTOMER
+  - Create tickets
+  - View own tickets
+
+- SUPPORT
+  - View and manage tickets
+  - Handle approval workflows
 
 ---
 
@@ -297,6 +317,34 @@ Rejects a pending approval request.
 
 ---
 
+
+# Frontend Integration
+
+The frontend application is developed using React with Vite and deployed using AWS Amplify Hosting.
+
+Frontend responsibilities:
+
+- User authentication using Amazon Cognito
+- Sending authenticated API requests
+- Ticket creation and management UI
+- Displaying AI-generated ticket analysis
+- Role-based UI rendering for CUSTOMER and SUPPORT users
+
+Communication Flow:
+
+React UI
+   |
+   |
+Amazon Cognito Authentication
+   |
+   |
+API Gateway REST APIs
+   |
+   |
+AWS Lambda Backend
+
+---
+
 # Internal Backend APIs
 
 The following backend components are **not exposed through API Gateway** and operate internally within the application.
@@ -305,7 +353,7 @@ The following backend components are **not exposed through API Gateway** and ope
 |------------|---------|
 | Processor Lambda | Amazon SQS |
 | Bedrock Knowledge Base | Processor Lambda |
-| Amazon Bedrock Agent | Processor Lambda |
+| Amazon Bedrock Agent | Processor Lambda / Agent Invocation|
 | GetOrderStatus Lambda | Bedrock Agent |
 | IssueRefund Lambda | Bedrock Agent |
 | ResetPassword Lambda | Bedrock Agent |
@@ -327,15 +375,29 @@ The following backend components are **not exposed through API Gateway** and ope
 
 # API Workflow
 
-1. Client sends an HTTP request through the Streamlit application.
-2. Amazon API Gateway receives the request.
-3. API Gateway invokes the appropriate AWS Lambda function.
-4. Lambda performs the requested business logic.
-5. Ticket-related operations store data in Amazon DynamoDB.
-6. Ticket creation events are published to Amazon SQS.
-7. The Processor Lambda consumes the message and invokes Amazon Bedrock.
-8. AI analysis updates the ticket information in DynamoDB.
-9. The frontend retrieves updated ticket information using the REST APIs.
+1. User accesses the React application hosted on AWS Amplify.
+
+2. User authenticates using Amazon Cognito.
+
+3. React frontend receives authentication tokens from Cognito.
+
+4. React application sends authenticated HTTP requests to Amazon API Gateway.
+
+5. API Gateway validates Cognito JWT tokens.
+
+6. API Gateway invokes the appropriate AWS Lambda function.
+
+7. Lambda performs the requested business logic.
+
+8. Ticket-related operations store data in Amazon DynamoDB.
+
+9. Ticket creation events are published to Amazon SQS.
+
+10. Processor Lambda consumes SQS messages and invokes Amazon Bedrock.
+
+11. AI analysis updates ticket information in DynamoDB.
+
+12. React frontend retrieves and displays updated ticket information through REST APIs.
 
 ---
 

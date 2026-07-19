@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate, useLocation } from "react-router-dom";
 import { Ticket, Mail, Lock, Loader2 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { Alert } from "../components/UI";
@@ -7,11 +7,13 @@ import { Alert } from "../components/UI";
 export default function Login() {
   const { loggedIn, login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState(location.state?.email || "");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [infoMessage] = useState(location.state?.message || "");
 
   if (loggedIn) {
     return <Navigate to="/" replace />;
@@ -48,6 +50,7 @@ export default function Login() {
         <h2>Welcome back</h2>
         <p className="subtitle">Sign in to continue to your dashboard.</p>
 
+        {infoMessage && <Alert type="success">{infoMessage}</Alert>}
         {error && <Alert type="error">{error}</Alert>}
 
         <form onSubmit={handleSubmit}>
@@ -86,6 +89,13 @@ export default function Login() {
             {submitting ? "Signing in..." : "Login"}
           </button>
         </form>
+
+        <div className="auth-switch">
+          Don&apos;t have an account?{" "}
+          <button type="button" className="link-btn" onClick={() => navigate("/signup")}>
+            Create Account
+          </button>
+        </div>
 
         <div className="login-footer">
           &copy; {new Date().getFullYear()} Ticket Triage Assistant

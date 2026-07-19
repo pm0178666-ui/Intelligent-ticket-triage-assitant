@@ -1,6 +1,8 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
+import VerifyOtp from "./pages/VerifyOtp";
 import Home from "./pages/Home";
 import CreateTicket from "./pages/CreateTicket";
 import MyTickets from "./pages/MyTickets";
@@ -13,6 +15,8 @@ export default function App() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<SignUp />} />
+      <Route path="/verify-otp" element={<VerifyOtp />} />
 
       <Route element={<ProtectedRoute />}>
         <Route path="/" element={<Home />} />
