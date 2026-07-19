@@ -59,8 +59,15 @@ export default function ApprovalDashboard() {
   function load() {
     setLoading(true);
     setError("");
+
     getApprovals()
-      .then(setApprovals)
+      .then((data) => {
+        const sortedApprovals = [...data].sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+
+        setApprovals(sortedApprovals);
+      })
       .catch((e) => setError(`Failed to load approvals: ${e.message || e}`))
       .finally(() => setLoading(false));
   }
